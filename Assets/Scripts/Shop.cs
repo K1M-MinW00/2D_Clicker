@@ -1,5 +1,7 @@
 using System.Collections;
+using System.IO;
 using TMPro;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -29,15 +31,50 @@ public class Shop : MonoBehaviour
 
     private Coroutine coroutine;
 
+    string filePath = Path.Combine(Application.dataPath, "ShopData.txt");
+
     private void Start()
     {
+        LoadData();
+
         A_UpdateUI();
         B_UpdateUI();
         C_UpdateUI();
     }
 
+    void LoadData()
+    {
+        if (!File.Exists(filePath))
+        {
+            Debug.Log("파일이 존재하지 않음");
+            return;
+        }
 
+        var jsonData = File.ReadAllText(filePath);
 
+        if (jsonData == null)
+        {
+            Debug.Log("파일이 비어있음");
+            return;
+        }
+
+        var data = DataManager.DeSerialize<ShopData>(jsonData);
+
+        A_Price = data.A_Price;
+        B_Price = data.B_Price;
+        C_Price = data.C_Price;
+    }
+
+    void SaveData()
+    {
+        ShopData data = new ShopData();
+        data.A_Price = A_Price;
+        data.B_Price = B_Price;
+        data.C_Price = C_Price;
+
+        DataManager.Serialize<ShopData>(data, filePath);
+        GameManager.Instance.SaveData();
+    }
     public void ClickUpgradeDmg()
     {
         if (GameManager.Instance.Gold > A_Price)
@@ -46,8 +83,8 @@ public class Shop : MonoBehaviour
             GameManager.Instance.UpdateGold(-A_Price);
             A_Price = A_Price * 1.5;
             A_UpdateUI();
+            SaveData();
         }
-
 
         else
         {
@@ -66,6 +103,7 @@ public class Shop : MonoBehaviour
             GameManager.Instance.UpdateGold(-B_Price);
             B_Price = B_Price * 1.5;
             B_UpdateUI();
+            SaveData();
         }
         else
         {
@@ -84,6 +122,7 @@ public class Shop : MonoBehaviour
             GameManager.Instance.UpdateGold(-C_Price);
             C_Price = C_Price * 1.5;
             C_UpdateUI();
+            SaveData();
         }
 
 

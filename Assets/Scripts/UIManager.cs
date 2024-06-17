@@ -29,6 +29,11 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        Reset();
+    }
+
+    public void Reset()
+    {
         UpdateStage();
         UpdateGold();
         UpdateTimer();
@@ -53,7 +58,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateTimer()
     {
-        timerText.text = GameManager.Instance.Timer.ToString("0.00");   
+        timerText.text = GameManager.Instance.Timer.ToString("0.0000");   
     }
 
     public void UpdateStage()

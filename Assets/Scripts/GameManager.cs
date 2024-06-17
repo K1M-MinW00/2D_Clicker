@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.IO;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [field:Header("Click Data")]
+    [field: Header("Click Data")]
     [field: SerializeField] public double ClickDmg { get; private set; } = 1;
     [field: SerializeField] public double AutoClickDmg { get; private set; } = 2;
     [field: SerializeField] public float Timer { get; private set; } = 3.0f;
@@ -17,12 +19,60 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public int Stage { get; private set; } = 1;
     [field: SerializeField] public double Reward { get; private set; } = 100;
 
+    string filePath = Path.Combine(Application.dataPath, "UserData.txt");
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
     }
 
+    private void Start()
+    {
+        LoadData();
+        UIManager.Instance.Reset();
+    }
+
+    public void LoadData()
+    {
+        if (!File.Exists(filePath))
+        {
+            Debug.Log("파일이 존재하지 않음");
+            return;
+        }
+
+        var jsonData = File.ReadAllText(filePath);
+
+        if (jsonData == null)
+        {
+            Debug.Log("파일이 비어있음");
+            return;
+        }
+
+        var data = DataManager.DeSerialize<UserData>(jsonData);
+
+        ClickDmg = data.clickDmg;
+        AutoClickDmg = data.autoClickDmg;
+        Timer = data.timer;
+
+        Gold = data.gold;
+        Reward = data.reward;
+        Stage = data.stage;
+    }
+
+    public void SaveData()
+    {
+        UserData data = new UserData();
+        data.clickDmg = ClickDmg;
+        data.autoClickDmg = AutoClickDmg;
+        data.timer = Timer;
+        data.gold = Gold;
+        data.reward = Reward;
+        data.stage = Stage;
+
+
+        DataManager.Serialize<UserData>(data, "UserData.txt");
+    }
 
     public void UpdateGold(double change)
     {
@@ -49,8 +99,8 @@ public class GameManager : MonoBehaviour
 
         Gold += Reward;
 
-        
         UIManager.Instance.UpdateGold();
+        SaveData();
     }
 
     public void UpgradeDmg(double modifier, bool isClickDmg)
@@ -68,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     public void ReduceTimer(float modifier)
     {
-        Timer *=  modifier;
+        Timer *= modifier;
         UIManager.Instance.UpdateTimer();
     }
 }
