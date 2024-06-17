@@ -44,6 +44,11 @@
 - 1,000 = 1a , 10,000 = 1b 등으로 표현하여 int 형 범위보다 큰 단위를 표현할 수 있습니다.
 - [화폐 단위 표현 방법](https://forestj.tistory.com/102) 를 참고하였습니다.
 
+### 데이터 저장 및 불러오기
+- 게임을 시작할 때, 저장된 데이터가 있다면 자동으로 불러옵니다.
+- Stage 클리어 시, 업그레이드 시, 데이터를 저장합니다.
+- **JSon** 활용
+- 
 <br>
 
 ## 🎞 플레이 화면
@@ -64,8 +69,12 @@
   <summary> 💎 상점 </summary>
   <img src = "https://github.com/K1M-MinW00/2D_Clicker/assets/122630746/94ec3f3c-f289-4035-95d8-2c056c4a7a01" width = 500>
 
- <img src = "https://github.com/K1M-MinW00/2D_Clicker/assets/122630746/a16a87c9-d4d9-41cb-8d45-7697f7a66ef8" width = 500>
- 
+  <img src = "https://github.com/K1M-MinW00/2D_Clicker/assets/122630746/a16a87c9-d4d9-41cb-8d45-7697f7a66ef8" width = 500>
+
+ <summary> 💲 돈 부족 </summary>
+ <img src= "https://github.com/K1M-MinW00/2D_Clicker/assets/122630746/50612b14-5307-48d5-8d4c-9020c06f4962" width = 500>
+  5초 간 해당 메시지를 띄운 뒤, 원래대로 돌아갑니다.
+  
 </details>
 
 ### Big Integer 표현
